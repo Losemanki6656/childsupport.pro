@@ -16,7 +16,7 @@
 				data-filter-name="{{ $filter->name }}"
 				data-language="{{ str_replace('_', '-', app()->getLocale()) }}"
 				>
-				<option value="">-</option>
+				{{-- <option value="">-</option> --}}
 				@if (is_array($filter->values) && count($filter->values))
 					@foreach($filter->values as $key => $value)
 						<option value="{{ $key }}"

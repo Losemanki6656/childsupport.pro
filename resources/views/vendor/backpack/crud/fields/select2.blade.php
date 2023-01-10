@@ -29,7 +29,7 @@
         >
 
         @if ($field['allows_null'])
-            <option value="">-</option>
+            {{-- <option value="">-</option> --}}
         @endif
 
         @if (count($options))

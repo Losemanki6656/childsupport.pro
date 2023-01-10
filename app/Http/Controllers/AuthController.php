@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Railway;
 use App\Models\Organization;
+use App\Models\Message;
 use App\Http\Resources\RailwayResource;
 use App\Http\Resources\OrganizationResource;
 use Validator;
@@ -124,10 +125,21 @@ class AuthController extends Controller
 
     public function send_message(Request $request){
 
-       
+        $org = Organization::find($request->organization_id);
 
+        $message = new Message();
+        $message->railway_id = $org->railway_id;
+        $message->organization_id = $request->organization_id;
+        $message->chat_id = $request->chat_id;
+        $message->phone = $request->phone;
+        $message->token = $request->token;
+        $message->fullname = $request->fullname;
+        $message->comment = $request->comment;
+        $message->save();
+
+       
         return response()->json([
-            'organizations' => OrganizationResource::collection($organizations)
+            'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!"
         ]);
     }
 }

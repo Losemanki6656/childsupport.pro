@@ -2,17 +2,12 @@
 
 namespace App\Models;
 
-
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable; 
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Message extends Model
 {
-    use HasFactory, Notifiable, CrudTrait, HasRoles;
+    use CrudTrait;
 
     /*
     |--------------------------------------------------------------------------
@@ -20,7 +15,7 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'users';
+    protected $table = 'messages';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -34,6 +29,13 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+    public function sendSms($crud = false)
+    {
+        return view('vendor.backpack.crud.buttons.send-sms-to-worker', [
+            'id' => $this->id
+        ]);
+    }
+    
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

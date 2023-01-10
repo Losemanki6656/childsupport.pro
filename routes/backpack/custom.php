@@ -18,4 +18,12 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('railway', 'RailwayCrudController');
     Route::crud('organization', 'OrganizationCrudController');
+    Route::crud('message', 'MessageCrudController');
+    Route::crud('result', 'ResultCrudController');
+
+    Route::get('send-sms-to-worker/{id}', 'MessageCrudController@getSendSmsToWorker')
+        ->name('get-send-sms-to-worker');
+
+    Route::post('send-sms-to-worker', 'MessageCrudController@postSendSmsToWorker')
+        ->name('post-send-sms-to-worker');
 }); // this should be the absolute last line of this file

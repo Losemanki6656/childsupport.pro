@@ -5,7 +5,7 @@
 	class="nav-item dropdown {{ Request::get($filter->name)?'active':'' }}">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="caret"></span></a>
     <ul class="dropdown-menu">
-		<a class="dropdown-item" parameter="{{ $filter->name }}" dropdownkey="" href="">-</a>
+		{{-- <a class="dropdown-item" parameter="{{ $filter->name }}" dropdownkey="" href="">-</a> --}}
 		<div role="separator" class="dropdown-divider"></div>
 		@if (is_array($filter->values) && count($filter->values))
 			@foreach($filter->values as $key => $value)
