@@ -5,9 +5,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Railway;
 use App\Models\Organization;
+use App\Models\TelegramToken;
+use App\Models\Member;
 use App\Models\Message;
+use App\Models\Result;
 use App\Http\Resources\RailwayResource;
 use App\Http\Resources\OrganizationResource;
+use App\Http\Resources\OrganizationCollection;
 use Validator;
 
 class AuthController extends Controller
@@ -111,15 +115,10 @@ class AuthController extends Controller
 
     public function organizations(Request $request){
 
-        $organizations = Organization::query()
-            ->when(\Request::input('railway_id'),function($query,$railway_id){
-                $query->where(function ($query) use ($railway_id) {
-                    $query->where('railway_id',$railway_id);
-                });
-            })->get();
+        $organizations = Organization::paginate();
 
         return response()->json([
-            'organizations' => OrganizationResource::collection($organizations)
+            'organizations' => new OrganizationCollection($organizations)
         ]);
     }
 
@@ -127,12 +126,12 @@ class AuthController extends Controller
 
         $org = Organization::find($request->organization_id);
 
+        $member = Member::where('chat_id', $request->chat_id)->first();
+
         $message = new Message();
         $message->railway_id = $org->railway_id;
         $message->organization_id = $request->organization_id;
-        $message->chat_id = $request->chat_id;
-        $message->phone = $request->phone;
-        $message->token = $request->token;
+        $message->member_id = $member->id;
         $message->fullname = $request->fullname;
         $message->comment = $request->comment;
         $message->save();
@@ -140,6 +139,96 @@ class AuthController extends Controller
        
         return response()->json([
             'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!"
+        ]);
+    }
+
+    public function send_token(Request $request){
+
+        $tokens = TelegramToken::get()->count();
+        if($tokens == 0) {
+            $message = new TelegramToken();
+            $message->token = $request->token;
+            $message->save();
+
+            return response()->json([
+                'message' => "Token muvaffaqqiyatli qo'shildi!"
+            ]);
+
+        } else {
+            $message = TelegramToken::find(1);
+            $message->token = $request->token;
+            $message->save();
+
+            return response()->json([
+                'message' => "Token muvaffaqqiyatli yangilandi!"
+            ]);
+        }
+          
+    }
+
+    public function addreception(Request $request){
+
+        $org = Organization::find($request->organization_id);
+        $org->reception_name = $request->reception_name;
+        $org->reception_phone = $request->reception_phone;
+        $org->reception_staff = $request->reception_staff;
+        $org->chat_reception_id = $request->chat_reception_id;
+        $org->save();
+
+       
+        return response()->json([
+            'message' => "Sizning profilingiz ro'yxatdan o'tqazildi!"
+        ]);
+    }
+
+    public function addmember(Request $request){
+
+        $members = Member::where('chat_id', $request->chat_id)->count();
+        
+        if($members == 0) {
+            $org = new Member();
+            $org->chat_id = $request->chat_id;
+            $org->name = $request->name;
+            $org->phone = $request->phone;
+            $org->save();
+        }
+
+        return response()->json([
+            'message' => "Sizning profilingiz ro'yxatdan o'tqazildi!"
+        ]);
+    }
+
+    public function updatemember($chat_id, Request $request){
+
+        $org = Member::where('chat_id', $chat_id)->first();
+        $org->name = $request->name;
+        $org->phone = $request->phone;
+        $org->save();
+
+        return response()->json([
+            'message' => "Sizning profilingiz yangilandi!"
+        ]);
+    }
+
+    public function reply_message($message_id, Request $request){
+
+        $org = Message::find($message_id);
+        $org->result_id = $request->result_id;
+        $org->comment_result = $request->comment_result;
+        $org->status_message = true;
+        $org->save();
+
+        return response()->json([
+            'message' => "Javob yuborildi!"
+        ]);
+    }
+
+    public function results(){
+
+        $results = Result::get();
+
+        return response()->json([
+            'results' => $results
         ]);
     }
 }

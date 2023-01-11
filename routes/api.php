@@ -24,3 +24,16 @@ Route::get('/organizations', [AuthController::class, 'organizations']);
 
 
 Route::post('/send-message', [AuthController::class, 'send_message']);
+
+
+Route::post('/send/token', [AuthController::class, 'send_token']);
+
+Route::post('/addreception', [AuthController::class, 'addreception']);
+
+
+Route::post('/add-member', [AuthController::class, 'addmember']);
+Route::put('/update-member/{chat_id}', [AuthController::class, 'updatemember']);
+
+
+Route::post('/reply/message/{message_id}', [AuthController::class, 'reply_message']);
+Route::get('/results', [AuthController::class, 'results']);

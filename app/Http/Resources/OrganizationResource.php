@@ -16,7 +16,8 @@ class OrganizationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'chat_reception_id' => $this->chat_reception_id
         ];
     }
 }

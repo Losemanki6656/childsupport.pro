@@ -19,10 +19,8 @@ class CreateMessagesTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index()->nullable();
             $table->bigInteger('result_id')->unsigned()->index()->nullable();
             $table->bigInteger('organization_id')->unsigned()->index()->nullable();
+            $table->bigInteger('member_id')->unsigned()->index()->nullable();
             $table->string('fullname')->nullable();
-            $table->string('phone')->nullable();
-            $table->integer('chat_id')->nullable();
-            $table->text('token')->nullable();
             $table->text('comment')->nullable();
             $table->boolean('status_message')->default(false);
             $table->boolean('status')->default(true);
@@ -31,6 +29,7 @@ class CreateMessagesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('result_id')->references('id')->on('results');
             $table->foreign('organization_id')->references('id')->on('organizations');
+            $table->foreign('member_id')->references('id')->on('members');
             $table->timestamps();
         });
     }

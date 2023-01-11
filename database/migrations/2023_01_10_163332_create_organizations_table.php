@@ -18,6 +18,10 @@ class CreateOrganizationsTable extends Migration
             $table->bigInteger('railway_id')->unsigned()->index()->nullable();
             $table->bigInteger('user_id')->unsigned()->index()->nullable();
             $table->string('name')->nullable();
+            $table->string('reception_name')->nullable();
+            $table->string('reception_phone')->nullable();
+            $table->string('reception_staff')->nullable();
+            $table->integer('chat_reception_id')->nullable();
             $table->foreign('railway_id')->references('id')->on('railways');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

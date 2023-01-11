@@ -26,4 +26,5 @@ Route::group([
 
     Route::post('send-sms-to-worker', 'MessageCrudController@postSendSmsToWorker')
         ->name('post-send-sms-to-worker');
+    Route::crud('member', 'MemberCrudController');
 }); // this should be the absolute last line of this file
