@@ -13,6 +13,12 @@ use App\Http\Resources\RailwayResource;
 use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\OrganizationCollection;
 use App\Http\Resources\MessageCollection;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+
+
+use App\Models\ResToken;
+
 use Validator;
 
 class AuthController extends Controller
@@ -125,24 +131,77 @@ class AuthController extends Controller
 
     public function send_message(Request $request){
 
-        $org = Organization::find($request->organization_id);
+        $org = Organization::where('exodim_org_id', $request->organization_id)->first();
 
-        $member = Member::where('chat_id', $request->chat_id)->first();
+        if($org) {
+            $member = Member::where('chat_id', $request->chat_id)->first();
 
-        $message = new Message();
-        $message->railway_id = $org->railway_id;
-        $message->organization_id = $request->organization_id;
-        $message->member_id = $member->id;
-        $message->fullname = $request->fullname;
-        $message->comment = $request->comment;
-        $message->save();
+            $message = new Message();
+            $message->railway_id = $org->railway_id;
+            $message->organization_id = $org->id;
+            $message->pinfl = $request->pinfl;
+            $message->member_id = $member->id;
+            $message->fullname = $request->fullname;
+            $message->comment = $request->comment;
+            $message->save();
+    
+           
+            return response()->json([
+                'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!",
+                'message_id' => $message->id,
+                'chat_reception_id' => $org->chat_reception_id
+            ]);
+        } else {
+            return response()->json([
+                'message' => "Xozirda ushbu xizmatdan foydalanishni imkoniyati mavjud emas! Iltimos bir ozdan keyin qayta urunib ko'ring!"
+            ], 400);
+        }
 
-       
-        return response()->json([
-            'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!",
-            'message_id' => $message->id,
-            'chat_reception_id' => $org->chat_reception_id
+        
+    }
+
+    public function checkCadryExodim($pinfl)
+    {
+        $tok = ResToken::get();
+
+        if($tok->count())
+            $token = ResToken::find(1)->res_token; else $token = $this->tokenRefresh();
+
+        $res = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '. $token,
+        ])->get('https://exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
+        
+        if($res->status() == 401) {
+            $token = $this->tokenRefresh();
+
+            $res = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '. $token,
+            ])->get('https://exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
+        }
+        
+        return response()->json($res->json());
+    }
+
+    public function tokenRefresh()
+    {
+        $res = Http::post('https://exodim.railway.uz/api/auth/login', [
+            'email' => 'admin@gmail.com',
+            'password' => 'admin123321',
         ]);
+        $tok = ResToken::get();
+        
+        if($tok->count()) {
+            $token = ResToken::find(1);
+            $token->res_token = $res->json('access_token');
+            $token->save();
+        } else {
+            $token = new ResToken();
+            $token->res_token = $res->json('access_token');
+            $token->save();
+        }
+        return $res->json('access_token');
     }
 
     public function send_token(Request $request){

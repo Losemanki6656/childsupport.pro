@@ -40,3 +40,6 @@ Route::get('/results', [AuthController::class, 'results']);
 
 
 Route::get('/history/{chat_id}', [AuthController::class, 'information']);
+
+
+Route::get('/check/{pinfl}', [AuthController::class, 'checkCadryExodim']);

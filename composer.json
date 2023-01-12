@@ -11,7 +11,7 @@
         "backpack/permissionmanager": "^6.0",
         "doctrine/dbal": "2.*",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.5",
         "irazasyed/telegram-bot-sdk": "^3.9",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",

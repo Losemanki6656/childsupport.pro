@@ -22,6 +22,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('reception_phone')->nullable();
             $table->string('reception_staff')->nullable();
             $table->integer('chat_reception_id')->nullable();
+            $table->integer('exodim_org_id')->nullable();
             $table->foreign('railway_id')->references('id')->on('railways');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
