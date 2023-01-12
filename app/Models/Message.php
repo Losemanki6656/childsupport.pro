@@ -45,7 +45,17 @@ class Message extends Model
     {
         return $this->belongsTo(Result::class);
     }
-    
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class,'member_id');
+    }
+
+    public function phone()
+    {
+        return $this->member->phone;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

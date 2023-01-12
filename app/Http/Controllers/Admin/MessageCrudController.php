@@ -112,8 +112,10 @@ class MessageCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'phone',
-            'label' => 'Phone'
+            'name' => 'member',
+            'label' => 'Phone',
+            'type' => 'model_function',
+            'function_name' => 'phone'
         ]);
 
         $this->crud->addColumn([
@@ -124,6 +126,11 @@ class MessageCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'comment',
             'label' => 'Comment'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'comment_result',
+            'label' => 'Result'
         ]);
 
         
