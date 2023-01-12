@@ -37,3 +37,6 @@ Route::put('/update-member/{chat_id}', [AuthController::class, 'updatemember']);
 
 Route::post('/reply/message/{message_id}', [AuthController::class, 'reply_message']);
 Route::get('/results', [AuthController::class, 'results']);
+
+
+Route::get('/history/{chat_id}', [AuthController::class, 'information']);

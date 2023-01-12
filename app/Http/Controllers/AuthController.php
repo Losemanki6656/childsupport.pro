@@ -12,6 +12,7 @@ use App\Models\Result;
 use App\Http\Resources\RailwayResource;
 use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\OrganizationCollection;
+use App\Http\Resources\MessageCollection;
 use Validator;
 
 class AuthController extends Controller
@@ -138,7 +139,9 @@ class AuthController extends Controller
 
        
         return response()->json([
-            'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!"
+            'message' => "Sizning arizangiz qabul qilindi! Arizangiz 5 ish soatida ko'rib chiqilib sizga ma'lumot yetqaziladi!",
+            'message_id' => $message->id,
+            'chat_reception_id' => $org->chat_reception_id
         ]);
     }
 
@@ -229,6 +232,17 @@ class AuthController extends Controller
 
         return response()->json([
             'results' => $results
+        ]);
+    }
+
+    public function information($chat_id){
+
+        $member_id = Member::where('chat_id', $chat_id)->first();
+
+        $messages = Message::where('member_id', $member_id->id)->with(['organization','result'])->paginate(10);
+
+        return response()->json([
+            'history' => new MessageCollection($messages)
         ]);
     }
 }
