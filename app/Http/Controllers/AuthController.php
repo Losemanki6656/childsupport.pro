@@ -297,10 +297,18 @@ class AuthController extends Controller
 
         $member_id = Member::where('chat_id', $chat_id)->first();
 
-        $messages = Message::where('member_id', $member_id->id)->with(['organization','result'])->paginate(10);
+        if($member_id) {
+            $messages = Message::where('member_id', $member_id->id)->with(['organization','result'])->paginate(10);
 
-        return response()->json([
-            'history' => new MessageCollection($messages)
-        ]);
+            return response()->json([
+                'history' => new MessageCollection($messages)
+            ]);
+        } else {
+            return response()->json([
+                'message' => "Foydalanuvchi topilmadi"
+            ],404); 
+        }
+
+      
     }
 }
