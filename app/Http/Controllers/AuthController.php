@@ -139,9 +139,8 @@ class AuthController extends Controller
             $message = new Message();
             $message->railway_id = $org->railway_id;
             $message->organization_id = $org->id;
-            $message->pinfl = $request->pinfl;
+            $message->fullname = $request->pinfl;
             $message->member_id = $member->id;
-            $message->fullname = $request->fullname;
             $message->comment = $request->comment;
             $message->save();
     
