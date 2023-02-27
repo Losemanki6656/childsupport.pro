@@ -169,7 +169,7 @@ class AuthController extends Controller
         $res = Http::withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '. $token,
-        ])->get('https://exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
+        ])->get('https://api-exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
         
         if($res->status() == 401) {
             $token = $this->tokenRefresh();
@@ -177,7 +177,7 @@ class AuthController extends Controller
             $res = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '. $token,
-            ])->get('https://exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
+            ])->get('https://api-exodim.railway.uz/api/administration/checkcadry/' . $pinfl);
         }
         
         return response()->json($res->json());
@@ -185,7 +185,7 @@ class AuthController extends Controller
 
     public function tokenRefresh()
     {
-        $res = Http::post('https://exodim.railway.uz/api/auth/login', [
+        $res = Http::post('https://api-exodim.railway.uz/api/auth/login', [
             'email' => 'admin@gmail.com',
             'password' => 'admin123321',
         ]);
