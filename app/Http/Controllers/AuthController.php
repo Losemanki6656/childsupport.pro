@@ -187,7 +187,7 @@ class AuthController extends Controller
     {
         $res = Http::post('https://api-exodim.railway.uz/api/auth/login', [
             'email' => 'admin@gmail.com',
-            'password' => 'admin123321',
+            'password' => 'Admin123321@',
         ]);
         $tok = ResToken::get();
         
